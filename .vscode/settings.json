@@ -1,0 +1,4 @@
+{
+    "dart.enableSdkFormatter": false,
+    "dart.lineLength": 160
+}
