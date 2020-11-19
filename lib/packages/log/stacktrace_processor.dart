@@ -37,7 +37,7 @@ class StacktraceProcessor {
   static bool _discardConsoleStacktraceLine(String line) {
     var match = _deviceStackTraceRegex.matchAsPrefix(line);
     if (match == null) return false;
-    return match.group(2).indexOf('/console.dart:') >= 0;
+    return match.group(2).indexOf('/log.dart:') >= 0;
   }
 
   static String formatStackTrace(StackTrace stackTrace, int methodCount) {

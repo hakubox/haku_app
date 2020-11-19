@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:haku_app/config/routes.dart';
-
-import 'home_controller.dart';
+import 'package:haku_app/config/page_routers.dart';
+import 'package:haku_app/controller/home_controller.dart';
 
 class HomePage extends GetView<HomeController> {
 
@@ -12,7 +11,7 @@ class HomePage extends GetView<HomeController> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title: Text('home_title'.tr)),
+      appBar: AppBar(title: Text('home.title'.tr)),
       body: Container(
         child: GetX<HomeController>(
           init: HomeController(),

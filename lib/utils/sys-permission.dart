@@ -1,6 +1,6 @@
 
 import 'package:get/get.dart';
-import 'package:haku_app/utils/log/log.dart';
+import 'package:haku_app/packages/log/log.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /// 系统权限

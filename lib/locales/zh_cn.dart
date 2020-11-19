@@ -4,24 +4,39 @@ const zh_CN = {
   'login': {
     'login': '登录',
     'register': '注册',
-    'logout': '登出'
+    'logout': '登出',
+    'username': '账号',
+    'password': '密码',
+    'user_placeholder': '请输入账号',
+    'username_invaild': '用户名格式不正确',
+    'password_invaild': '密码格式不正确',
   },
   'home': {
     'title': '我的页面'
   },
   // 权限
   'permission': {
-    // Android
-    'android_phone': '电话',
-    'android_camera': '相机',
-    'android_location': '地理位置',
-    'android_photos': '无',
-    'android_storage': '外部存储',
-    // Ios
-    'ios_phone': '无',
-    'ios_camera': '相机',
-    'ios_location': '地理位置',
-    'ios_photos': '照片',
-    'ios_storage': '文档及下载文件夹',
+    'android': {
+      'phone': '电话',
+      'amera': '相机',
+      'ocation': '地理位置',
+      'hotos': '无',
+      'torage': '外部存储',
+    },
+    'ios': {
+      'phone': '无',
+      'camera': '相机',
+      'location': '地理位置',
+      'photos': '照片',
+      'storage': '文档及下载文件夹',
+    }
+  },
+  // 错误
+  'error': {
+    'http': {
+      'cancel': '取消了请求',
+      'default': '请检查你的网络或者服务器地址以及服务器设备是否正常运行',
+      'timeout': '请检查你的网络或者服务器地址以及服务器设备是否正常运行',
+    }
   }
 };

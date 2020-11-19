@@ -13,10 +13,16 @@ abstract class TemplateTheme {
   Color primaryColor;
   /// 边框色调
   Color borderColor;
+  /// 反色文字色
+  Color fontColorInverse;
   /// 基础主题
   ThemeData baseTheme;
   /// 获取主题
   ThemeData getTheme();
+
+  /// 文本框文字样式
+  TextStyle inputTextStyle;
+
 
   /// Color转换为MaterialColor
   static MaterialColor createMaterialColor(Color color) {

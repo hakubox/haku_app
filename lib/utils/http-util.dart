@@ -3,6 +3,7 @@ import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'cache.dart';
+import 'package:get/get.dart';
 
 /// API Key
 const String _apiKey = 'gPmgRr9Dp3wzubTaGIgmMSpfNiKqkIAA0C8gkaBSN0ca3GWxk3W6682KuXRpxnDq';
@@ -11,6 +12,18 @@ const String __apiVersion = '1.0.0';
 /// 服务器地址
 const String _baseUrl = 'http://AAAAAAAAAAAA:7001/api/';
 
+/// HTTP请求内容类型
+enum HttpContentType {
+  /// JSON类型 'application/json;charset=UTF-8'
+  json,
+  /// 表单类型 'application/x-www-form-urlencoded'
+  form,
+  /// 表单文件类型 'multipart/form-data'
+  formData,
+  /// 文件流类型 'application/octet-stream'
+  octetStream
+}
+
 /// http请求参数
 class HttpOptions {
   /// http参数默认构造器
@@ -18,7 +31,7 @@ class HttpOptions {
     this.data,
     this.query,
     this.method = 'GET',
-    this.contentType = 'application/json;charset=UTF-8',
+    this.contentType = HttpContentType.json,
     this.responseType = ResponseType.json,
     this.apiVersion = __apiVersion,
     this.connectTimeout = 10000,
@@ -39,7 +52,7 @@ class HttpOptions {
     dynamic data, 
     Map<String, dynamic> query, 
     String method, 
-    String contentType, 
+    HttpContentType contentType, 
     ResponseType responseType, 
     String apiVersion, 
     int connectTimeout, 
@@ -82,7 +95,7 @@ class HttpOptions {
   /// 请求类型
   final String method;
   /// 请求内容类型
-  final String contentType;
+  final HttpContentType contentType;
   /// 返回值类型
   final ResponseType responseType;
   /// 后端API版本号
@@ -110,6 +123,17 @@ class HttpUtil {
 
   /// 预定义拦截器
   static List<InterceptorsWrapper> _interceptors = [];
+
+  /// 获取Http内容类型枚举的字符串
+  static String _getContentType(HttpContentType type) {
+    switch(type) {
+      case HttpContentType.json: return 'application/json;charset=UTF-8';
+      case HttpContentType.form: return 'application/x-www-form-urlencoded';
+      case HttpContentType.formData: return 'multipart/form-data';
+      case HttpContentType.octetStream: return 'application/octet-stream';
+      default: return '';
+    }
+  }
 
   /// 添加拦截器
   static addInterceptor(InterceptorsWrapper interceptor) {
@@ -146,7 +170,7 @@ class HttpUtil {
   static Future<dynamic> formPost(String url, [Map<String, dynamic> data, HttpOptions options]) {
     return request<dynamic>(url, options.merge(
       method: 'POST',
-      contentType: Headers.formUrlEncodedContentType,
+      contentType: HttpContentType.form,
       data: FormData.fromMap(data)
     ));
   }
@@ -189,7 +213,7 @@ class HttpUtil {
   static Future<dynamic> upload(String url, [Map<String, dynamic> data, HttpOptions options]) {
     return request<dynamic>(url, options.merge(
       method: 'POST',
-      contentType: 'multipart/form-data',
+      contentType: HttpContentType.formData,
       data: FormData.fromMap(data)
     ));
   }
@@ -243,9 +267,9 @@ class HttpUtil {
       dio.interceptors.addAll(_interceptors);
       if (options.interceptor != null) dio.interceptors.add(options.interceptor);
 
-      // 头部校验token
+      /// 头部校验token
       String _headerToken;
-      // 身份校验jwt串
+      /// 身份校验jwt串
       String _authorization = Cache.get('authorization');
       int time;
 
@@ -272,7 +296,7 @@ class HttpUtil {
         cancelToken: options.cancelToken,
         options: Options(
           method: options.method,
-          contentType: options.contentType,
+          contentType: _getContentType(options.contentType),
           responseType: options.responseType,
           headers: { 
             'Authorization': 'Bearer ' + _authorization,
@@ -313,8 +337,8 @@ class HttpError {
   /// 错误信息
   HttpError createErrorEntity(DioError error) {
     switch (error.type) {
-      case DioErrorType.CANCEL: return HttpError(error: error, code: -1, message: '请求取消');
-      case DioErrorType.DEFAULT: return HttpError(error: error, code: -1, message: '请检查你的网络或者服务器地址以及服务器设备是否正常运行');
+      case DioErrorType.CANCEL: return HttpError(error: error, code: -1, message: 'error.http.cancel'.tr);
+      case DioErrorType.DEFAULT: return HttpError(error: error, code: -1, message: 'error.http.default'.tr);
       case DioErrorType.CONNECT_TIMEOUT: return HttpError(error: error, code: -1, message: '网络开小差了啦');
       case DioErrorType.SEND_TIMEOUT: return HttpError(error: error, code: -1, message: '网络开小差了啦');
       case DioErrorType.RECEIVE_TIMEOUT: return HttpError(error: error, code: -1, message: '网络开小差了啦');

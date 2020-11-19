@@ -1,3 +1,5 @@
+import 'package:haku_app/utils/tool.dart';
+
 import 'en_us.dart';
 import 'zh_cn.dart';
 
@@ -11,12 +13,12 @@ class Locales {
     'en_US': initLang(en_US)
   };
 
-  static Map<String, String> initLang(Map<String, Map<String, String>> lang) {
+  static Map<String, String> initLang(Map<String, dynamic> lang) {
     Map<String, String> _map = {};
-    lang.keys.toList().forEach((e) {
-      lang[e].keys.toList().forEach((key) {
-        _map[e + '_' + key] = lang[e][key];
-      });
+    recursiveMap(lang, '', (key, data, code) {
+      if (data[key].runtimeType.toString() == 'String') {
+        _map[code] = data[key];
+      }
     });
     return _map;
   }

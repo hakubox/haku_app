@@ -109,7 +109,9 @@ class Log {
   static _print(String str, Level level, [dynamic error, StackTrace stackTrace]) {
     AnsiColor color = levelColors[level];
     String log = '${getLogTimeStr(DateTime.now())} $str';
-    _storage.writeLogsToFile('[${levelTitle[level]}] $log');
+    if ([Level.error,Level.wtf].contains(level)) {
+      _storage.writeLogsToFile('[${levelTitle[level]}] $log');
+    }
     print(color('${levelEmojis[level]} $log'));
 
     if ([Level.error,Level.wtf].contains(level) && error != null) {

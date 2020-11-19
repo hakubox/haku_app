@@ -1,13 +1,16 @@
+import 'dart:ui';
+
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:haku_app/model/profile_model.dart';
+import 'package:haku_app/packages/app_lifecycle/app_lifecycle.dart';
+import 'package:haku_app/packages/log/log.dart';
+import 'package:haku_app/packages/network_state/network_state.dart';
 import 'package:haku_app/utils/http-util.dart';
 import 'package:haku_app/utils/sys-permission.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import './../theme/theme.dart';
 import 'cache.dart';
-import 'log/log.dart';
 
 abstract class Global {
   static SharedPreferences _prefs;
@@ -17,6 +20,9 @@ abstract class Global {
 
   /// 个人信息
   static ProfileModel profile;
+
+  /// App状态
+  static AppLifecycleState lifecycleState;
 
   /// 是否为release版
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
@@ -41,6 +47,12 @@ abstract class Global {
       defaultPopGesture: true,
       defaultTransition: Transition.cupertino
     );
+
+    // App生命周期监听
+    AppLifecycle.listen((AppLifecycleState state) { });
+
+    // 网络状态监听
+    NetworkState.listen((event) { });
 
     // _prefs = await SharedPreferences.getInstance();
     // var _profile = _prefs.getString("profile");

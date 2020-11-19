@@ -17,9 +17,20 @@ class LightTheme implements TemplateTheme {
   @override
   Color borderColor = Color(0xFF000000);
 
+  /// 反色文字色
+  @override
+  Color fontColorInverse = Color(0xFFFFFFFF);
+
   /// 基础主题
   @override
   ThemeData baseTheme = ThemeData.light();
+
+  /// 文本框文本样式
+  @override
+  TextStyle inputTextStyle = TextStyle(
+    // fontFamily: 'Poppins',
+    fontWeight: FontWeight.w400
+  );
 
   @override
   ThemeData getTheme() {

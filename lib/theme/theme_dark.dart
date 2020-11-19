@@ -17,6 +17,12 @@ class DarkTheme implements TemplateTheme {
   @override
   Color borderColor = Color(0xFF000000);
 
+  @override
+  Color fontColorInverse = Color(0xFF000000);
+
+  @override
+  TextStyle inputTextStyle;
+
   /// 基础主题
   @override
   ThemeData baseTheme = ThemeData.light();

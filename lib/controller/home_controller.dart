@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
-import 'package:haku_app/utils/console/console.dart';
-import 'package:haku_app/utils/log/log.dart';
+import 'package:haku_app/packages/log/log.dart';
 
 /// 登录控制器
 class HomeController extends GetxController {
