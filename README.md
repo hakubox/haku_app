@@ -70,6 +70,7 @@ flutter packages pub run build_runner build
 
 > Android权限列表
 [https://www.cnblogs.com/diyishijian/p/5629545.html](https://www.cnblogs.com/diyishijian/p/5629545.html)
+
 > Ios权限列表
 [https://pub.flutter-io.cn/packages/permission_handler](https://pub.flutter-io.cn/packages/permission_handler)
 
@@ -97,10 +98,16 @@ lib/locales | 多语言 | 用于放置多语言文件
 lib/model | 实体类 | 用于放置项目所需的dto实体类
 lib/packages | 功能库 | 用于放置封装的一些功能库，例如网络状态、日志打印等等
 lib/packages/log | 日志库 | 用于打印日志
+lib/packages/app_lifecycle | App声明周期库 | 
 lib/packages/app_router | 路由库 | 用于路由的统一管理
+lib/packages/barcode_scan | 条形码扫描 | 
+lib/packages/icons | 字体图标相关库 | 
+lib/packages/log | 日志打印库 | 
+lib/packages/log | 网络状态监控库 | 
 lib/page | 页面 | 用于放置项目所需页面/控制器/绑定
 lib/theme | 主题 | 用于定制系统的各个不同主题
-lib/utils | 工具类 | 例如网络请求或其他各类工具函数等
+lib/utils | 工具库 | 例如网络请求或其他各类工具函数等
+lib/utils/controller | 基础页面控制器 | 例如网络请求或其他各类工具函数等
 lib/utils/cache.dart | 本地缓存库 | 
 lib/utils/feature-permission.dart | 功能权限库 | 
 lib/utils/global.dart | 公共库 | 用于存放全局公共变量及部分配置

@@ -5,7 +5,9 @@ enum AppState {
   /// 加载中
   LOADING, 
   /// 完成
-  DONE, 
+  DONE,
   /// 错误
-  ERROR
+  ERROR,
+  /// 无数据
+  BLANK
 }

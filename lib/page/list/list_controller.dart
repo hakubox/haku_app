@@ -5,7 +5,7 @@ import 'package:haku_app/api/event_api.dart';
 import 'package:haku_app/model/event_model.dart';
 import 'package:haku_app/packages/log/log.dart';
 import 'package:haku_app/utils/app_state.dart';
-import 'package:haku_app/utils/list_page_controller.dart';
+import 'package:haku_app/utils/controller/list_page_controller.dart';
 
 /// 列表页控制器
 class ListController extends GetxController with ListPageController {
@@ -13,9 +13,6 @@ class ListController extends GetxController with ListPageController {
   ListController();
 
   static ListController get to => Get.find();
-
-  /// App状态
-  final appState = Rx<AppState>();
 
   /// 活动列表
   var eventList = <EventModel>[].obs;

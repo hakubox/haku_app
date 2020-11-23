@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
+import 'package:haku_app/utils/controller/page_controller.dart';
 
 /// 登录控制器
-class SplashController extends GetxController {
+class SplashController extends GetxController with PageController {
 
   /// 名称
   var name = '123'.obs;
