@@ -11,7 +11,16 @@ const zh_CN = {
     'username_invaild': '用户名格式不正确',
     'password_invaild': '密码格式不正确',
   },
+  // 主页面
   'home': {
+    'title': '主页面'
+  },
+  // 列表页
+  'list': {
+    'title': '列表页面'
+  },
+  // 我的页面
+  'my': {
     'title': '我的页面'
   },
   // 权限

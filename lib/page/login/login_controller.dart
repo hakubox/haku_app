@@ -1,8 +1,12 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:haku_app/config/routes/routers.dart';
+import 'package:haku_app/model/user_model.dart';
 import 'package:haku_app/packages/log/log.dart';
 import 'package:haku_app/packages/network_state/network_state.dart';
 import 'package:haku_app/utils/feature-permission.dart';
+import 'package:haku_app/utils/global.dart';
 import 'package:haku_app/utils/http-util.dart';
 
 /// 登录控制器
@@ -14,23 +18,15 @@ class LoginController extends GetxController {
   final RxString password = ''.obs;
 
   /// 用户名控制器
-  // TextEditingController usernameController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  /// 密码控制器
+  final TextEditingController passwordController = TextEditingController();
 
-  bool get usernameIsValid {
-    if (username.value.isNotEmpty && username.value.length < 3) return false;
-    return true;
-  }
+  bool get usernameIsInvalid => username.value.isEmpty || username.value.length < 3;
 
-  bool get passwordIsValid {
-    if (password.value.isNotEmpty && password.value.length < 6) return false;
-    return true;
-  }
+  bool get passwordIsInvalid => password.value.isEmpty || password.value.length < 6;
 
-  bool get formLoginIsValid =>
-      usernameIsValid &&
-      passwordIsValid &&
-      username.value.isNotEmpty &&
-      password.value.isNotEmpty;
+  bool get formLoginIsInvalid => usernameIsInvalid || passwordIsInvalid;
 
   clearUsername() => this.username.value = '';
   clearPassword() => this.password.value = '';
@@ -40,18 +36,35 @@ class LoginController extends GetxController {
 
   /// 登录
   login() async {
-    this.username.value = '已登录';
-
-    if (formLoginIsValid) {
+    
+    if (formLoginIsInvalid) {
+      Get.snackbar('提示', '账号或密码不符合格式！',
+        colorText: Colors.white,
+        backgroundColor: Colors.red,
+      );
+    } else {
       Log.info('登录了');
 
-      await FeaturePermission.request('');
-      var userInfo = await HttpUtil.post('user/login', {
-        'username': username,
-        'password': password
-      });
-    } else {
-      Log.error('校验失败');
+      FeaturePermission.request('');
+
+
+      // var userInfo = await HttpUtil.post('user/login', {
+      //   'username': username,
+      //   'password': password
+      // });
+      UserModel user = UserModel(
+        id: '1',
+        username: username.value,
+        password: password.value
+      );
+      Global.login(user);
+      clearUsername();
+      clearPassword();
+      Get.toNamed(Routes.base);
+      Get.snackbar('提示', '已登录',
+        colorText: Colors.white,
+        backgroundColor: Colors.green,
+      );
     }
   }
 

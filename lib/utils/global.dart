@@ -1,31 +1,36 @@
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
+// import 'package:fluwx/fluwx.dart';
 import 'package:get/get.dart';
-import 'package:haku_app/model/profile_model.dart';
+import 'package:haku_app/model/user_model.dart';
 import 'package:haku_app/packages/app_lifecycle/app_lifecycle.dart';
 import 'package:haku_app/packages/log/log.dart';
 import 'package:haku_app/packages/network_state/network_state.dart';
 import 'package:haku_app/utils/http-util.dart';
 import 'package:haku_app/utils/sys-permission.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert' as convert;
 import 'cache.dart';
 
 abstract class Global {
-  static SharedPreferences _prefs;
-  // static Profile profile = Profile();
   /// 网络缓存对象
   // static NetCache netCache = NetCache();
 
   /// 个人信息
-  static ProfileModel profile;
+  static UserModel userInfo;
 
   /// App状态
   static AppLifecycleState lifecycleState;
 
-  /// 是否为release版
+  /// 是否为生产环境
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
+
+  /// 登录并赋权限
+  static void login(UserModel user) {
+    userInfo = user;
+    Cache.add('user_info', convert.jsonEncode(UserModel.toJson(user)));
+  }
 
   /// 初始化全局信息，会在APP启动时执行
   static Future init() async {
@@ -39,7 +44,12 @@ abstract class Global {
     ]);
 
     // 初始化缓存
-    Cache.init();
+    await Cache.init();
+
+    if (Cache.contains('user_info')) {
+      var _user = convert.jsonDecode(Cache.get('user_info'));
+      userInfo = UserModel.fromJson(_user);
+    }
 
     // 初始化Get库全局配置
     Get.config(
@@ -95,6 +105,9 @@ abstract class Global {
         return en;
       }
     ));
+
+    // 添加fluwx初始化
+    // registerWxApi(appId: "wxd930ea5d5a228f5f", universalLink: "https://your.univerallink.com/link/");
   }
 
 }

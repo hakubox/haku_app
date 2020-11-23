@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
+import 'package:get/get.dart';
+import 'package:haku_app/model/page_list.dart';
 import 'package:haku_app/packages/barcode_scan/barcode_scan.dart';
 
 /// md5 加密
@@ -62,4 +64,28 @@ Future scan() async {
       // Toast.show("请求出错：$e");
     }
   }
+}
+
+/// 转换日期
+DateTime parseDate(String date) {
+  if (GetPlatform.isAndroid) {
+    return DateTime.tryParse(date.replaceAll(RegExp(r'/'), '-'));
+  } else if (GetPlatform.isIOS) {
+    return DateTime.tryParse(date.replaceAll(RegExp(r'/'), '-'));
+  } else {
+    return DateTime.tryParse(date);
+  }
+}
+  
+/// 转换List<Map>为实体类列表
+List<T> transformList<T>(List data, T fromJson(Map<String, dynamic> state)) {
+  return data.map((e) => fromJson(e)).toList();
+}
+
+/// 转换Map为分页实体类列表
+PageList<T> transformPageList<T>(data, T fromJson(Map<String, dynamic> state)) {
+  return PageList(
+    total: int.tryParse(data.total),
+    list: data.list.map((item) => fromJson(item)).toList()
+  );
 }

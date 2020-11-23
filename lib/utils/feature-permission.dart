@@ -8,16 +8,17 @@ class FeaturePermission {
   static Map<Permission, String> permissionEnum = {};
 
   /// 获取权限名称
+  @deprecated
   static String getPermissionName() {
     return '';
   }
 
   /// 请求权限
-  static Future<void> request(String permission) async {
+  static bool request(String permission) {
     if ((permission ?? '').trim().isEmpty) {
-      return;
+      return true;
     } else if (1 == 1) {
-
+      return true;
     } else {
       var _exception = PermissionException(permission);
       Log.error(_exception.toString());
@@ -26,7 +27,9 @@ class FeaturePermission {
   }
 
   /// 请求权限
-  static Future<void> requestAll(List<String> permissions) async {
+  @deprecated
+  static bool requestAll(List<String> permissions) {
+    throw Exception('功能未完成');
   }
 }
 

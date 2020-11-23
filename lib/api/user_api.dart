@@ -21,6 +21,6 @@ class UserApi {
   }
   /// 新增用户
   add(UserModel user, [HttpOptions options]) async {
-      return HttpUtil.post('User/add', user, options);
+    return HttpUtil.post('User/add', user, options);
   }
 }

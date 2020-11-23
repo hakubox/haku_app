@@ -1,16 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http2_adapter/dio_http2_adapter.dart';
+import 'package:haku_app/config/app_config/index.dart';
+import 'package:haku_app/packages/log/log.dart';
+import 'package:haku_app/utils/tool.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'cache.dart';
 import 'package:get/get.dart';
 
 /// API Key
-const String _apiKey = 'gPmgRr9Dp3wzubTaGIgmMSpfNiKqkIAA0C8gkaBSN0ca3GWxk3W6682KuXRpxnDq';
+final String _apiKey = api_key;
 /// 默认API版本
 const String __apiVersion = '1.0.0';
 /// 服务器地址
-const String _baseUrl = 'http://AAAAAAAAAAAA:7001/api/';
+final String _baseUrl = api_base_url;
+// 运道会测试环境： https://sportscircle.api.gejinet.com/api/
+// jsonplaceholder： https://jsonplaceholder.typicode.com/
 
 /// HTTP请求内容类型
 enum HttpContentType {
@@ -78,12 +83,12 @@ class HttpOptions {
       interceptor: this.interceptor ?? interceptor,
       returnOriginData: this.returnOriginData ?? returnOriginData,
       headers: {
-        ...headers,
-        ...this.headers
+        ...headers ?? {},
+        ...this.headers ?? {}
       },
       extra: {
-        ...extra,
-        ...this.extra
+        ...extra ?? {},
+        ...this.extra ?? {}
       },
     );
   }
@@ -151,8 +156,8 @@ class HttpUtil {
   }
 
   /// get请求
-  static Future<Object> get(String url, [Map<String, dynamic> query, HttpOptions options]) {
-    return request<dynamic>(url, options.merge(
+  static Future<dynamic> get(String url, [Map<String, dynamic> query, HttpOptions options]) {
+    return request<dynamic>(url, (options ?? HttpOptions()).merge(
       method: 'GET',
       query: query.map((key, value) => MapEntry(key, value.toString()))
     ));
@@ -160,7 +165,7 @@ class HttpUtil {
 
   /// post请求
   static Future<dynamic> post(String url, [dynamic data, HttpOptions options]) {
-    return request<dynamic>(url, options.merge(
+    return request<dynamic>(url, (options ?? HttpOptions()).merge(
       method: 'POST',
       data: data
     ));
@@ -168,7 +173,7 @@ class HttpUtil {
 
   /// post表单提交
   static Future<dynamic> formPost(String url, [Map<String, dynamic> data, HttpOptions options]) {
-    return request<dynamic>(url, options.merge(
+    return request<dynamic>(url, (options ?? HttpOptions()).merge(
       method: 'POST',
       contentType: HttpContentType.form,
       data: FormData.fromMap(data)
@@ -177,7 +182,7 @@ class HttpUtil {
 
   /// delete请求
   static Future<dynamic> delete(String url, [dynamic data, HttpOptions options]) {
-    return request<dynamic>(url, options.merge(
+    return request<dynamic>(url, (options ?? HttpOptions()).merge(
       method: 'DELETE',
       data: data
     ));
@@ -185,7 +190,7 @@ class HttpUtil {
 
   /// put请求
   static Future<dynamic> put(String url, [dynamic data, HttpOptions options]) {
-    return request<dynamic>(url, options.merge(
+    return request<dynamic>(url, (options ?? HttpOptions()).merge(
       method: 'PUT',
       data: data
     ));
@@ -193,7 +198,7 @@ class HttpUtil {
 
   /// download请求
   static Future<dynamic> download(String url, [HttpOptions options]) {
-    return request<dynamic>(url, options.merge(
+    return request<dynamic>(url, (options ?? HttpOptions()).merge(
       method: 'GET',
       responseType: ResponseType.bytes
     ));
@@ -211,7 +216,7 @@ class HttpUtil {
   /// });
   /// ```
   static Future<dynamic> upload(String url, [Map<String, dynamic> data, HttpOptions options]) {
-    return request<dynamic>(url, options.merge(
+    return request<dynamic>(url, (options ?? HttpOptions()).merge(
       method: 'POST',
       contentType: HttpContentType.formData,
       data: FormData.fromMap(data)
@@ -219,14 +224,15 @@ class HttpUtil {
   }
 
   /// 下载文件（暂未使用）
-  // static Future<ResponseBody> saveFile(String url, [HttpOptions options]) async {
-  //   ResponseBody body = await request<ResponseBody>(url, options.merge(
-  //     method: 'GET',
-  //     contentType: 'application/octet-stream', 
-  //     responseType: ResponseType.stream
-  //   ));
-  //   return body;
-  // }
+  @deprecated
+  static Future<ResponseBody> saveFile(String url, [HttpOptions options]) async {
+    ResponseBody body = await request<ResponseBody>(url, (options ?? HttpOptions()).merge(
+      method: 'GET',
+      contentType: HttpContentType.octetStream, 
+      responseType: ResponseType.stream
+    ));
+    return body;
+  }
 
   /// 从Response中获取Dio实例
   static Dio getDioForResponse(Response response) {
@@ -271,10 +277,10 @@ class HttpUtil {
       String _headerToken;
       /// 身份校验jwt串
       String _authorization = Cache.get('authorization');
-      int time;
+      String time;
 
-      if (_authorization.isEmpty) {
-        time = DateTime.now().millisecondsSinceEpoch;
+      if (_authorization == null || _authorization.isEmpty) {
+        time = DateTime.now().millisecondsSinceEpoch.toString();
       }
 
       // url上如果有参数则视为url传参，否则从query或data中取
@@ -283,7 +289,7 @@ class HttpUtil {
         queryData.sort();
         _headerToken = _apiKey + time.toString() + jsonEncode(queryData.join('')).replaceAll('\'', '').replaceAll('=', '');
       } else if (options.query != null) {
-        List<String> queryData = options.query.keys.map((e) => e + (options.query[e] ?? '').toString());
+        List<String> queryData = options.query.keys.map((e) => e + (options.query[e] ?? '').toString()).toList();
         queryData.sort();
         _headerToken = _apiKey + time.toString() + jsonEncode(queryData.join('')).replaceAll('\'', '');
       } else {
@@ -299,9 +305,9 @@ class HttpUtil {
           contentType: _getContentType(options.contentType),
           responseType: options.responseType,
           headers: { 
-            'Authorization': 'Bearer ' + _authorization,
+            'Authorization': _authorization == null ? '' : 'Bearer ' + _authorization,
             'apiversion': options.apiVersion,
-            'token': _headerToken,
+            'token': generateMd5(_headerToken),
             'time': time,
             ...options.headers
           },
@@ -313,7 +319,18 @@ class HttpUtil {
       );
 
       print('响应数据：' + response.toString());
+      // if (response.data.toString() == '') {
+      //   throw DioError(
+      //     type: DioErrorType.DEFAULT,
+      //     error: '无数据返回'
+      //   );
+      // }
     } on DioError catch (e) {
+      rethrow;
+    } on Exception catch (e) {
+      rethrow;
+    } catch (e) {
+      Log.error('未知错误: $e');
       rethrow;
     }
 

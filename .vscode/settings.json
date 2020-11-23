@@ -2,5 +2,7 @@
     "dart.enableSdkFormatter": false,
     "dart.lineLength": 160,
     "editor.snippetSuggestions": "bottom",
-    "editor.suggest.snippetsPreventQuickSuggestions": false
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.fontFamily": "'Fira Code', Consolas, 'Courier New', monospace",
+    "terminal.integrated.fontFamily": "'Fira Code'"
 }
