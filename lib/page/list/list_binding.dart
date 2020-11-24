@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:haku_app/page/list/list_controller.dart';
+import 'list_controller.dart';
 
 class ListBinding implements Bindings {
   @override

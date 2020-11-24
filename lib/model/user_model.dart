@@ -15,10 +15,8 @@ class UserModel {
 
   /// 用户名
   final String username;
-  /// 密码
-  final String password;
 
-  const UserModel({ this.id, this.name, this.age, this.username, this.password });
+  const UserModel({ this.id, this.name, this.age, this.username });
 
   static UserModel fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
   

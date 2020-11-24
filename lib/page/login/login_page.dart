@@ -5,11 +5,11 @@ import 'package:haku_app/packages/icons/fryo_icons.dart';
 
 import 'login_controller.dart';
 
+/// 登录页
 class LoginPage extends GetView<LoginController> {
 
   @override
   Widget build(context) => Scaffold(
-      appBar: AppBar(title: Text('登录')),
       body: Container(
         padding: EdgeInsets.only(
           top: 80, left: 40, right: 40, bottom: 40
@@ -24,7 +24,7 @@ class LoginPage extends GetView<LoginController> {
                   TextBox(
                     labelText: 'login.username'.tr,
                     controller: controller.usernameController,
-                    errorText: controller.usernameIsInvalid ? null : 'login.username_invaild'.tr,
+                    errorText: controller.usernameIsInvalid ? 'login.username_invaild'.tr : null,
                     prefixIcon: Icon(Fryo.user),
                     suffixIcon: controller.username.value.isNotEmpty ? IconButton(
                       icon: Icon(Icons.cancel),
@@ -38,7 +38,7 @@ class LoginPage extends GetView<LoginController> {
                   TextBox(
                     labelText: 'login.password'.tr,
                     controller: controller.passwordController,
-                    errorText: controller.passwordIsInvalid ? null : 'login.password_invaild'.tr,
+                    errorText: controller.passwordIsInvalid ? 'login.password_invaild'.tr : null,
                     prefixIcon: Icon(Fryo.lock),
                     suffixIcon: controller.username.value.isNotEmpty ? IconButton(
                       icon: Icon(Icons.cancel),

@@ -4,8 +4,8 @@ import 'package:haku_app/utils/controller/page_controller.dart';
 /// 登录控制器
 class HomeController extends GetxController with PageController {
 
-  /// 名称
-  var name = '123'.obs;
+  /// 是否选择
+  var isSelected = false.obs;
 
   /// 初始化函数
   @override

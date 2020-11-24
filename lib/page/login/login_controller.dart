@@ -47,15 +47,13 @@ class LoginController extends GetxController {
 
       FeaturePermission.request('');
 
-
-      // var userInfo = await HttpUtil.post('user/login', {
-      //   'username': username,
-      //   'password': password
+      // var re = await HttpUtil.post('user/login', {
+      //   'username': username.value,
+      //   'password': password.value
       // });
       UserModel user = UserModel(
         id: '1',
-        username: username.value,
-        password: password.value
+        username: username.value
       );
       Global.login(user);
       clearUsername();

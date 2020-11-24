@@ -71,6 +71,7 @@ class Img extends StatelessWidget {
     return Card(
       child: _img,
       color: backgroundColor,
+      shadowColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: borderRadius,
         side: border

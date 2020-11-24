@@ -6,12 +6,12 @@ import 'package:frefresh/frefresh.dart';
 import 'package:haku_app/component/img.dart';
 import 'package:haku_app/config/routes/routers.dart';
 import 'package:haku_app/model/event_model.dart';
-import 'package:haku_app/packages/icons/fryo_icons.dart';
 import 'package:haku_app/packages/log/log.dart';
 import 'package:haku_app/utils/app_state.dart';
 
 import 'list_controller.dart';
 
+/// 列表页
 class ListPage extends GetView<ListController> {
 
   @override
@@ -171,39 +171,44 @@ class ListPage extends GetView<ListController> {
             itemCount: controller.eventList.length,
             itemBuilder: (_, index) {
               EventModel item = controller.eventList[index];
-              return Container(
-                height: 72,
-                padding: EdgeInsets.only(bottom: 6, top: 6),
-                decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Color(0xFFCCCCCC), width: 0.5)),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 0,
-                      child: item.coverUrl.length > 0 ? Img(
-                        item.coverUrl[0],
-                        width: 80,
-                        height: 60,
-                        fit: BoxFit.cover,
-                        borderRadius: BorderRadius.all(Radius.circular(4)),
-                      ) : Image.asset('assets/img/no-image.jpg'),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        padding: EdgeInsets.only(left: 6, top: 2),
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          item.title,
-                          style: TextStyle(
-                            fontSize: 14
-                          )
-                        ),
+              return InkWell(
+                child: Container(
+                  height: 72,
+                  padding: EdgeInsets.only(bottom: 6, top: 6),
+                  decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: Color(0xFFCCCCCC), width: 0.5)),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 0,
+                        child: item.coverUrl.length > 0 ? Img(
+                          item.coverUrl[0],
+                          width: 80,
+                          height: 60,
+                          fit: BoxFit.cover,
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                        ) : Image.asset('assets/img/no-image.jpg'),
                       ),
-                    )
-                  ],
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 6, top: 2),
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            item.title,
+                            style: TextStyle(
+                              fontSize: 14
+                            )
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
+                onTap: () {
+                  Get.toNamed(Routes.detail, arguments: item);
+                },
               );
               
               

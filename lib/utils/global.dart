@@ -32,6 +32,12 @@ abstract class Global {
     Cache.add('user_info', convert.jsonEncode(UserModel.toJson(user)));
   }
 
+  /// 注销账号
+  static void logout() {
+    userInfo = null;
+    Cache.remove('user_info');
+  }
+
   /// 初始化全局信息，会在APP启动时执行
   static Future init() async {
 

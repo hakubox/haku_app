@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/root_widget.dart';
 import 'package:haku_app/config/routes/pages.dart';
 import 'package:haku_app/packages/app_lifecycle/app_lifecycle.dart';
@@ -7,13 +6,10 @@ import 'package:haku_app/packages/app_router/page_routers.dart';
 import 'package:haku_app/theme/theme.dart';
 import 'package:haku_app/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
-import 'config/app_config/index.dart';
 import 'config/routes/routers.dart';
 import 'locales/locales.dart';
 import 'package:get/get.dart';
 import 'dart:ui' as ui;
-
-import 'packages/log/log.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,7 +56,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         darkTheme: AppTheme.dark.getTheme(),
         translationsKeys: AppTranslation.translations,
         // 默认路由
-        initialRoute: Routes.splash,
+        initialRoute: Routes.login,
         // 404路由
         // unknownRoute: GetPage(name: '/notfound', page: () => UnknownRoutePage()),
         // 路由配置

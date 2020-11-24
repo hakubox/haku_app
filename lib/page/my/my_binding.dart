@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:haku_app/page/my/my_controller.dart';
+import 'my_controller.dart';
 
 class MyBinding implements Bindings {
   @override

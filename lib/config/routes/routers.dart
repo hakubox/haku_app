@@ -12,6 +12,8 @@ abstract class Routes {
   static const login = '/login';
   /// 列表页
   static const list = '/list';
+  /// 详情页
+  static const detail = '/detail';
   /// 我的页面
   static const my = '/my';
   /// 购物车

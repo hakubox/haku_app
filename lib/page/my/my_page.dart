@@ -5,6 +5,7 @@ import 'package:haku_app/packages/icons/fryo_icons.dart';
 import 'package:haku_app/page/my/my_controller.dart';
 import 'package:haku_app/utils/global.dart';
 
+/// 我的页面
 class MyPage extends GetView<MyController> {
 
   @override
@@ -38,7 +39,8 @@ class MyPage extends GetView<MyController> {
               child: MaterialButton(
                 child: Text('退出登录'),
                 onPressed: () {
-                  Get.toNamed(Routes.login);
+                  Global.logout();
+                  Get.offAllNamed(Routes.login);
                 },
               ),
             ),

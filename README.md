@@ -26,10 +26,25 @@ flutter doctor
 
 ```dart
 // 创建GetX作用域
-Obx(() => Weight);
+Obx(() => Weight weight);
+
+// 页面跳转
+Get.toNamed(Routes route);
+
+// 页面跳转（同时显示底部栏，需传入当前底部栏id）
+Get.toNamed(Routes route, id: int id);
 
 // 返回主页面（Tab Bar）
 Get.offAllNamed(Routes.base);
+
+// 弹出框
+Get.dialog(Weight weight);
+
+// 底部弹出框
+Get.bottomSheet(Weight weight);
+
+// 关闭弹出框
+Get.back();
 
 // 切换语言
 var locale = Locale('en', 'US');
