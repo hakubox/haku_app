@@ -5,46 +5,50 @@
 ## 常用命令
 
 ```Shell
-# 运行
+# 本机运行
 flutter run
-
-# 打包app
-flutter build apk
-flutter build ios
-
+# 打包APP
+flutter build apk --no-tree-shake-icons
+flutter build ios --no-tree-shake-icons
+# 检查本机flutter状态
+flutter doctor
+# 获取所有真机设备包括Ios模拟器
+flutter devices
+# 将工具链上的库提升到最新版本
+flutter upgrade
 # 下载第三方库依赖
 flutter packages get
-
-# 更新flutter版本
-flutter upgrade
-
-# 检测Flutter工具链状态
-flutter doctor
+# 生成类（生成g.dart文件）
+flutter packages pub run build_runner build
+# 升级本地Flutter版本
+flutter upgrade --force
 ```
 
 ## 常用函数
 
 ```dart
 // 创建GetX作用域
-Obx(() => Weight weight);
+Obx(() => Widget widget);
 
-// 页面跳转
-Get.toNamed(Routes route);
+// 页面跳转并在返回时接收返回值
+Get.toNamed(Routes route).then((value) {});
 
-// 页面跳转（同时显示底部栏，需传入当前底部栏id）
+// 页面跳转（如果需要同时显示底部栏，须传入当前底部栏id）
 Get.toNamed(Routes route, id: int id);
 
 // 返回主页面（Tab Bar）
 Get.offAllNamed(Routes.base);
 
 // 弹出框
-Get.dialog(Weight weight);
+Get.dialog(Widget widget);
 
 // 底部弹出框
-Get.bottomSheet(Weight weight);
+Get.bottomSheet(Widget widget);
 
-// 关闭弹出框
+// 关闭弹出框/返回前一页面
 Get.back();
+// 返回前一页面并发送数据
+Get.back(result: data);
 
 // 切换语言
 var locale = Locale('en', 'US');
@@ -52,25 +56,6 @@ Get.updateLocale(locale);
 
 // 切换主题
 Get.changeTheme(ThemeData.light());
-```
-
-## 常用命令
-
-```bash
-# 本机运行
-flutter run
-# 打包APP（安卓）
-flutter build apk
-# 检查本机flutter状态
-flutter doctor
-# 获取所有真机设备包括Ios模拟器
-flutter devices
-# 将工具链上的库提升到最新版本
-flutter upgrade
-# 将所有库拉取到本地
-flutter packages get
-# 生成类（生成g.dart文件）
-flutter packages pub run build_runner build
 ```
 
 ### 其他Get库常用函数
@@ -98,7 +83,6 @@ flutter packages pub run build_runner build
 5. 不要写 `new` 关键字。
 6. 尽量避免在page层出现任何业务逻辑。
 7. 尽量避免在controller层出现通过字符串url的接口调用。
-8. 注意page和controller里的
 
 ## 各模块职责
 
@@ -138,6 +122,7 @@ lib/utils/tool.dart | 公共函数库 | 用于存放部分常用公共函数
 ## 第三方图标库
 
 - [Linear Icons](https://linearicons.com/free)
+- [Line Awesome](https://icons8.cn/line-awesome)
 
 ## Ios 开发注意事项
 

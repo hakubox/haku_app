@@ -1,14 +1,14 @@
 import 'package:haku_app/component/index.dart';
+import 'package:haku_app/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_picker/Picker.dart';
 import 'package:get/get.dart';
 import 'package:haku_app/theme/theme.dart';
 
-/// 通用文本框
-class TextBox extends StatefulWidget {
+/// 城市选择器
+class CityPicker extends StatefulWidget {
 
-  /// 文本框宽度
-  final double width;
   /// 标签文本
   final String labelText;
   /// 标签文本样式
@@ -26,47 +26,28 @@ class TextBox extends StatefulWidget {
   /// 点击事件
   final Function onTap;
   /// 值改变事件
-  final ValueChanged<String> onChanged;
+  final void Function(Picker, int, List<int>) onChanged;
   /// 编辑完成事件
-  final void Function(String text) onEditingComplete;
-  /// 编辑提交事件
-  final void Function(String text) onFieldSubmitted;
-  /// 获取焦点事件
-  final void Function(bool isFocus) onFocus;
+  final Function onEditingComplete;
   /// 是否隐藏输入
   final bool obscureText;
   /// 最大高度
-  final double maxHeight;
+  final double height;
   /// 文本框输入类型
   final TextInputType inputType;
-  final Function(String) onSaved;
+  /// 确认地址事件
+  final void Function(List<int>) onConfirm;
   final bool autocorrect;
   final FormFieldValidator<String> validator;
   final String errorText;
   final String initialValue;
-  /// 文本编辑控制器
-  final TextEditingController controller;
-  /// 最大行数
-  final int maxLines;
-  final List<TextInputFormatter> inputFormatters;
-  /// 提示文本
   final String hintText;
-  /// 提示文本颜色
-  final Color hintTextColor;
-  /// 键盘右下角行为
-  final TextInputAction inputAction;
   /// 前缀组件
   final Widget prefix;
   /// 后缀组件
   final List<Widget> suffix;
   /// 前缀图标
-  final IconData prefixIcon;
-  /// 前缀图标颜色
-  final Color prefixIconColor;
-  /// 前缀图标大小
-  final double prefixIconSize;
-  /// 允许清空
-  final Function onClear;
+  final Widget prefixIcon;
   /// 边框
   final BoxBorder border;
   /// 边框样式
@@ -77,20 +58,11 @@ class TextBox extends StatefulWidget {
   final EdgeInsetsGeometry padding;
   /// 外边距
   final EdgeInsetsGeometry margin;
-  /// 文本框内容内边距
-  final EdgeInsetsGeometry contentPadding;
   /// 自动获取焦点
   final bool autofocus;
-  /// 最大长度
-  final int maxLength;
-  /// 允许清空
-  final bool canClear;
-  /// 焦点控制器
-  final FocusNode focusNode;
 
-  const TextBox({
+  const CityPicker({
     Key key,
-    this.width,
     this.labelText,
     this.labelStyle = const TextStyle(),
     this.labelWidth = 80,
@@ -100,61 +72,82 @@ class TextBox extends StatefulWidget {
     this.onTap,
     this.onChanged,
     this.onEditingComplete,
-    this.onFieldSubmitted,
-    this.onFocus,
     this.inputType = TextInputType.text,
-    this.onSaved,
+    this.onConfirm,
     this.autocorrect = false,
     this.obscureText = false,
-    this.maxHeight = double.infinity,
+    this.height = 250,
     this.validator,
     this.errorText,
     this.initialValue,
-    this.controller,
-    this.maxLines = 1,
-    this.inputFormatters,
     this.hintText,
-    this.hintTextColor,
-    this.inputAction = TextInputAction.done,
     this.prefix,
     this.suffix = const [],
     this.prefixIcon,
-    this.prefixIconColor = const Color(0xFF888888),
-    this.prefixIconSize = 24.0,
-    this.onClear,
     this.border,
     this.borderSide = BorderSide.none,
     this.borderRadius = BorderRadius.zero,
     this.borderType = customTextBorderType,
-    this.padding = EdgeInsets.zero,
+    this.padding = const EdgeInsets.fromLTRB(0, 8, 2, 8),
     this.margin = EdgeInsets.zero,
-    this.contentPadding = const EdgeInsets.only(bottom: 10),
-    this.autofocus = false,
-    this.maxLength,
-    this.canClear = true,
-    this.focusNode
+    this.autofocus = true
   }) : super(key: key);
  
   @override
-  TextBoxState createState() => TextBoxState();
+  CityPickerState createState() => CityPickerState();
 }
 
-class TextBoxState extends State<TextBox> with WidgetsBindingObserver {
+class CityPickerState extends State<CityPicker> with WidgetsBindingObserver {
 
   /// 文本框焦点
   FocusNode _focusNode;
 
   TextEditingController _controller;
 
+  /// 显示文本
+  String text = '';
+
+  Picker picker;
+
   @override
   void initState() {
     super.initState();
-    if (widget.controller == null && widget.initialValue == null) {
-      _controller = TextEditingController();
-    } else if (widget.initialValue == null) {
-      _controller = widget.controller;
-    } else {
-    }
+    picker = Picker(
+      height: widget.height,
+      adapter: PickerDataAdapter<String>(
+        pickerdata: Global.addressMap
+      ),
+      cancelText: '取消',
+      confirmText: '确认',
+      textStyle: currentTheme.inputTextStyle,
+      cancelTextStyle: TextStyle(
+        fontSize: 16,
+        color: Color(0xFFBBBBBB),
+      ),
+      confirmTextStyle: TextStyle(
+        fontSize: 16,
+        color: currentTheme.primaryColor,
+      ),
+      changeToFirst: true,
+      textAlign: TextAlign.left,
+      selectedTextStyle: currentTheme.inputTextStyle.copyWith(
+        color: currentTheme.primaryColor
+      ),
+      columnPadding: const EdgeInsets.all(8.0),
+      onConfirm: (picker, value) {
+        List<String> names = picker.adapter.text.substring(1, picker.adapter.text.length - 1).split(', ');
+        if (widget.onConfirm != null) widget.onConfirm([
+          Global.addressIds[names[0]],
+          Global.addressIds[names[1]],
+          Global.addressIds[names[2]],
+        ]);
+        _controller.text = '${names[0]} / ${names[1]} / ${names[2]}';
+      },
+      onSelect: (picker, index, value) {
+        if (widget.onChanged != null) widget.onChanged(picker, index, value);
+      }
+    );
+    _controller = TextEditingController();
     _focusNode = FocusNode(
       onKey: (node, event) {
         if (!_focusNode.hasFocus) {
@@ -164,7 +157,6 @@ class TextBoxState extends State<TextBox> with WidgetsBindingObserver {
       }
     );
     _focusNode.addListener(() {
-      if (widget.onFocus != null) widget.onFocus(_focusNode.hasFocus);
       if (mounted) setState(() {});
     });
   }
@@ -187,15 +179,7 @@ class TextBoxState extends State<TextBox> with WidgetsBindingObserver {
 
   /// 获取边框样式
   BorderSide getBorderSide() {
-    return BorderSide(
-      width: widget.borderSide == null ? 0.5 : widget.borderSide.style != BorderStyle.none ? widget.borderSide.width : 0,
-      style: widget.borderSide != null && widget.borderSide.style == BorderStyle.none ? BorderStyle.none : BorderStyle.solid,
-      color: getColor()
-    );
-  }
-
-  Color getColor([Color defaultColor]) {
-    Color _color = defaultColor ?? (widget.borderSide.style != BorderStyle.none ? widget.borderSide.color : currentTheme.borderColor);
+    Color _color = widget.borderSide.style != BorderStyle.none ? widget.borderSide.color : currentTheme.borderColor;
     if (widget.readonly) {
       _color = Color(0xFFCCCCCC);
     } if (widget.errorText != null) {
@@ -203,7 +187,11 @@ class TextBoxState extends State<TextBox> with WidgetsBindingObserver {
     } else if (_focusNode.hasFocus) {
       _color = currentTheme.primaryColor;
     }
-    return _color;
+    return BorderSide(
+      width: widget.borderSide.style != BorderStyle.none ? widget.borderSide.width : 0.5,
+      style: BorderStyle.solid,
+      color: _color
+    );
   }
 
   /// 是否有错误
@@ -214,40 +202,33 @@ class TextBoxState extends State<TextBox> with WidgetsBindingObserver {
 
     var _box = ConstrainedBox(
       constraints: BoxConstraints(
-        maxHeight: widget.maxHeight,
+        maxHeight: double.infinity,
       ),
       child: TextFormField(
         focusNode: _focusNode,
-        readOnly: widget.readonly,
+        readOnly: true,
         autofocus: widget.autofocus,
         maxLengthEnforced: false,
-        maxLength: widget.maxLength,
-        textInputAction: widget.inputAction,
         // cursorHeight: 20,
-        inputFormatters: widget.inputFormatters,
-        maxLines: widget.maxLines,
         controller: _controller,
-        initialValue: widget.initialValue,
-        onTap: widget.onTap,
-        onChanged: (val) {
-          widget.onChanged(val);
-          if (mounted) setState(() {});
-        },
-        onFieldSubmitted: widget.onFieldSubmitted,
-        onEditingComplete: () {
-          if (widget.onEditingComplete != null) widget.onEditingComplete(_controller.text);
+        onEditingComplete: widget.onEditingComplete,
+        onTap: () {
+          picker.showModal(Get.context);
         },
         cursorColor: Get.theme.primaryColor,
         style: widget.textStyle ?? currentTheme.inputTextStyle,
         obscureText: widget.obscureText,
         keyboardType: widget.inputType,
-        onSaved: widget.onSaved,
         autocorrect: widget.autocorrect,
         validator: widget.validator,
         decoration: InputDecoration(
           border: InputBorder.none,
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          // prefix: widget.prefix,
+          prefixIcon: widget.prefixIcon,
+          prefixIconConstraints: BoxConstraints(
+            minWidth: 50,
+          ),
+          prefix: widget.prefix,
           // errorStyle: TextStyle(
           //   textBaseline: TextBaseline.alphabetic
           // ),
@@ -257,9 +238,9 @@ class TextBoxState extends State<TextBox> with WidgetsBindingObserver {
           hintText: widget.hintText,
           hintStyle: TextStyle(
             textBaseline: TextBaseline.alphabetic,
-            color: widget.hintTextColor ?? currentTheme.hintTextColor
+            color: currentTheme.disabledTextColor
           ),
-          contentPadding: widget.contentPadding,
+          // contentPadding: padding,
           fillColor: Colors.transparent,
           filled: true,
         ),
@@ -267,8 +248,6 @@ class TextBoxState extends State<TextBox> with WidgetsBindingObserver {
     );
 
     return Container(
-      width: widget.width ?? Get.width,
-      padding: widget.padding,
       margin: hasError ? widget.margin.add(EdgeInsets.only(bottom: 10)) : widget.margin,
       decoration: BoxDecoration(
         color: widget.backgroundColor,
@@ -277,23 +256,11 @@ class TextBoxState extends State<TextBox> with WidgetsBindingObserver {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widget.prefixIcon != null ? Container(
-            height: 40,
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(right: 10, left: 16),
-            child: Icon(widget.prefixIcon,
-              size: widget.prefixIconSize,
-              color: getColor(widget.prefixIconColor)
-            )
-          ) : SizedBox(),
           widget.labelText != null ? Expanded(
             flex: 0,
             child: Container(
-              alignment: Alignment.centerLeft,
               width: widget.labelWidth,
-              height: 40,
               margin: EdgeInsets.only(right: 10),
               child: Text(widget.labelText, style: widget.labelStyle),
             ),
@@ -327,28 +294,10 @@ class TextBoxState extends State<TextBox> with WidgetsBindingObserver {
           ),
           Expanded(
             flex: 0,
-            child: Container(
-              height: 40,
-              child: Row(
-                children: [
-                  Visibility(
-                    visible: _controller != null && widget.canClear && _controller.text.length > 0 && _focusNode.hasFocus,
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      child: InkWell(
-                        child: Icon(Icons.cancel, color: Colors.grey, size: 18),
-                        onTap: () {
-                          if (mounted) setState(() {
-                            _controller.clear();
-                            widget.onChanged('');
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  ...widget.suffix
-                ],
-              ),
+            child: Row(
+              children: [
+                ...widget.suffix
+              ],
             ),
           ),
         ],

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:haku_app/utils/controller/page_controller.dart';
+import 'package:haku_app/utils/controller/base_controller.dart';
 
-class DetailController extends GetxController with PageController {
+class DetailController extends GetxController with BaseController {
 
   /// 名称
   var name = '123'.obs;

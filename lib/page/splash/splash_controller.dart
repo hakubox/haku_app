@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:haku_app/config/routes/routers.dart';
-import 'package:haku_app/utils/controller/page_controller.dart';
+import 'package:haku_app/utils/controller/base_controller.dart';
 
 /// 登录控制器
-class SplashController extends GetxController with PageController {
+class SplashController extends GetxController with BaseController {
 
   /// 初始化函数
   @override

@@ -22,9 +22,9 @@ class LoginController extends GetxController {
   /// 密码控制器
   final TextEditingController passwordController = TextEditingController();
 
-  bool get usernameIsInvalid => username.value.isEmpty || username.value.length < 3;
+  bool get usernameIsInvalid => username.value.isNotEmpty && username.value.length < 3;
 
-  bool get passwordIsInvalid => password.value.isEmpty || password.value.length < 6;
+  bool get passwordIsInvalid => password.value.isNotEmpty && password.value.length < 6;
 
   bool get formLoginIsInvalid => usernameIsInvalid || passwordIsInvalid;
 
@@ -55,7 +55,7 @@ class LoginController extends GetxController {
         id: '1',
         username: username.value
       );
-      Global.login(user);
+      Global.login('__token__');
       clearUsername();
       clearPassword();
       Get.toNamed(Routes.base);

@@ -1,16 +1,22 @@
+
 import 'package:get/get.dart';
+import 'package:haku_app/component/index.dart';
+import 'package:haku_app/packages/log/log.dart';
 import '../app_state.dart';
 
-/// 分页页面控制器
-class ListPageController {
-  /// 当前页数
-  var pageNum = 1.obs;
-  /// 当前页大小
-  var pageSize = 10.obs;
-  /// 数据总条数
-  var total = 0.obs;
+/// 基础页面控制器
+class BaseController {
   /// App状态
   var appState = Rx<AppState>();
+
+  onAppState(AppState val) {
+    Log.info('val' + val.toString());
+    if (val == AppState.LOADING) {
+      Toast.loading();
+    } else {
+      Toast.hideAll();
+    }
+  }
   
   /// 改变值事件
   void Function(dynamic val) change(dynamic data, [dynamic setValue]) => (dynamic val) {

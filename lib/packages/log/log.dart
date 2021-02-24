@@ -1,7 +1,26 @@
 
+import 'package:flutter/material.dart';
+
 import 'log_storage.dart';
 import 'stacktrace_processor.dart';
 import 'ansi_color.dart';
+
+/// 获取日期（不包含时间）
+String getDateStr(DateTime time) {
+  // String _threeDigits(int n) {
+  //   if (n >= 100) return '$n';
+  //   if (n >= 10) return '0$n';
+  //   return '00$n';
+  // }
+
+  String _twoDigits(int n) {
+    if (n >= 10) return '$n';
+    return '0$n';
+  }
+
+  var now = DateTime.now();
+  return '${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)}'; // (+$timeSinceStart)
+}
 
 /// 获取时间
 String getLogTimeStr(DateTime time) {
@@ -21,8 +40,8 @@ String getLogTimeStr(DateTime time) {
   var min = _twoDigits(now.minute);
   var sec = _twoDigits(now.second);
   var ms = _threeDigits(now.millisecond);
-  var timeSinceStart = now.difference(time).toString();
-  return '[${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)} $h:$min:$sec.$ms]'; // (+$timeSinceStart)
+  // var timeSinceStart = now.difference(time).toString();
+  return '${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)} $h:$min:$sec.$ms'; // (+$timeSinceStart)
 }
 
 /// 日志级别
@@ -48,7 +67,7 @@ class Log {
   static final LogsStorage _storage = LogsStorage.instance;
 
   /// 堆栈打印行数
-  static int stacktraceLength = 4;
+  static int stacktraceLength = 12;
 
   /// 对应等级的颜色
   static final levelColors = {
@@ -81,51 +100,54 @@ class Log {
   };
 
   /// 打印文本
-  static log(String str) {
+  static log(dynamic str) {
     _print(str, Level.log);
   }
 
   /// 打印普通信息
-  static info(String str) {
+  static info(dynamic str) {
     _print(str, Level.info);
   }
 
   /// 打印警告信息（包含调用堆栈）
-  static warn(String str, [StackTrace stackTrace]) {
+  static warn(dynamic str, [StackTrace stackTrace]) {
     _print(str, Level.warn, null, stackTrace);
   }
 
   /// 打印错误信息（包含错误及调用堆栈）
-  static error(String str, [dynamic error, StackTrace stackTrace]) {
+  static error(dynamic str, [dynamic error, StackTrace stackTrace]) {
     _print(str, Level.error, error, stackTrace);
   }
 
   /// 打印严重错误信息（包含错误及调用堆栈）
-  static wtf(String str, [dynamic error, StackTrace stackTrace]) {
+  static wtf(dynamic str, [dynamic error, StackTrace stackTrace]) {
     _print(str, Level.wtf, error, stackTrace);
   }
 
   /// 打印
-  static _print(String str, Level level, [dynamic error, StackTrace stackTrace]) {
+  static _print(dynamic str, Level level, [dynamic error, StackTrace stackTrace]) {
     AnsiColor color = levelColors[level];
-    String log = '${getLogTimeStr(DateTime.now())} $str';
+    String log = '${getLogTimeStr(DateTime.now())} ${str.toString()}';
     if ([Level.error,Level.wtf].contains(level)) {
       _storage.writeLogsToFile('[${levelTitle[level]}] $log');
     }
-    print(color('${levelEmojis[level]} $log'));
+    debugPrint(color('${levelEmojis[level]} $log'));
 
-    if ([Level.error,Level.wtf].contains(level) && error != null) {
-      for (var line in error.split('\n')) {
-        _storage.writeLogsToFile(line);
-        print(color.resetForeground + color(line) + color.resetBackground);
+    if (error is String) {
+      if ([Level.error,Level.wtf].contains(level) && error != null) {
+        for (var line in error.split('\n')) {
+          _storage.writeLogsToFile(line);
+          debugPrint(color.resetForeground + color(line) + color.resetBackground);
+        }
       }
     }
+
     
     if ([Level.warn,Level.error,Level.wtf].contains(level)) {
       String stackTraceStr = StacktraceProcessor.formatStackTrace(stackTrace ?? StackTrace.current, stacktraceLength);
       for (var line in stackTraceStr.split('\n')) {
         _storage.writeLogsToFile(line);
-        print('$color $line');
+        debugPrint('$color $line');
       }
     }
   }

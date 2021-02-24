@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get/get_navigation/src/routes/custom_transition.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:get/get_navigation/src/routes/route_middleware.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 
 /// App页面
@@ -19,6 +20,8 @@ class AppPage {
   String title;
   /// 页面过渡动画
   Transition transition;
+  /// 中间件
+  List<GetMiddleware> middlewares;
   Curve curve;
   Alignment alignment;
   bool maintainState;
@@ -47,6 +50,7 @@ class AppPage {
     this.transition,
     this.customTransition,
     this.fullscreenDialog = false,
+    this.middlewares,
   })  : assert(page != null),
         assert(name != null),
         assert(maintainState != null),
@@ -62,7 +66,8 @@ class AppPage {
       settings: settings,
       parameter: parameter,
       transition: transition,
-      fullscreenDialog: fullscreenDialog
+      fullscreenDialog: fullscreenDialog,
+      middlewares: middlewares
     );
   }
 }

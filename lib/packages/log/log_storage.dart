@@ -39,23 +39,9 @@ class LogsStorage {
   Future<File> get _localFile async {
     final path = await _localPath + "/flogs/";
 
-    //creating directory
-    Directory(path).create()
-        // The created directory is returned as a Future.
-        .then((Directory directory) {
-      print(directory.path);
-    });
+    Directory(path).create();
 
-    //opening file
-    var file = File("$path${getLogTimeStr(DateTime.now())}.log");
-    var isExist = await file.exists();
-
-    //check to see if file exist
-    if (isExist) {
-      print('Log File exists');
-    } else {
-      print('Log File does not exist ');
-    }
+    var file = File("$path${getDateStr(DateTime.now())}.log");
     _file = file;
     return file;
   }
@@ -80,8 +66,8 @@ class LogsStorage {
           return false;
         }
         DateTime dateTime = file.lastModifiedSync();
-        print("delete log ${file.path} time=${dateTime.millisecondsSinceEpoch} before=${dateTime.isBefore(fiveDayBefore)}");
         if (dateTime.isBefore(fiveDayBefore)) {
+          print("delete log ${file.path} time=${dateTime.millisecondsSinceEpoch} before=${dateTime.isBefore(fiveDayBefore)}");
           file.delete();
         }
         return true;

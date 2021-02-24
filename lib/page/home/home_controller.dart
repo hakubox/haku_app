@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:haku_app/utils/controller/page_controller.dart';
+import 'package:haku_app/utils/controller/base_controller.dart';
 
 /// 登录控制器
-class HomeController extends GetxController with PageController {
+class HomeController extends GetxController with BaseController {
 
   /// 是否选择
   var isSelected = false.obs;

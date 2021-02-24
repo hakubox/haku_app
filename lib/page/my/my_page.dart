@@ -9,51 +9,53 @@ import 'package:haku_app/utils/global.dart';
 class MyPage extends GetView<MyController> {
 
   @override
-  Widget build(context) => Scaffold(
-    appBar: AppBar(
-      title: Text('my.title'.tr),
-      actions: [
-        IconButton(
-          icon: Icon(Fryo.home),
-          onPressed: () {
-            Get.offAllNamed(Routes.base);
-          },
-        )
-      ]
-    ),
-    body: Container(
-      child: Column(
-        children: [
-          Expanded(
-            flex: 0,
-            child: Row(
-              children: [
-                Text('用户名'),
-                Text(Global.userInfo.username)
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: MaterialButton(
-                child: Text('退出登录'),
-                onPressed: () {
-                  Global.logout();
-                  Get.offAllNamed(Routes.login);
-                },
+  Widget build(context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('my.title'.tr),
+        actions: [
+          IconButton(
+            icon: Icon(Fryo.home),
+            onPressed: () {
+              Get.back(result: '从我的页面回来的！');
+            },
+          )
+        ]
+      ),
+      body: Container(
+        child: Column(
+          children: [
+            Expanded(
+              flex: 0,
+              child: Row(
+                children: [
+                  Text('用户名'),
+                  Text(Global.userInfo.username)
+                ],
               ),
             ),
-          )
-        ],
+            Expanded(
+              flex: 1,
+              child: Center(
+                child: MaterialButton(
+                  child: Text('退出登录'),
+                  onPressed: () {
+                    Global.logout();
+                    Get.offAllNamed(Routes.login);
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
+        // child: Obx(() => MaterialButton(
+        //     child: Text(myController.userInfo.value.name),
+        //     onPressed: () {
+        //       Get.toNamed(Routes.login);
+        //     },
+        //   ),
+        // )
       ),
-      // child: Obx(() => MaterialButton(
-      //     child: Text(myController.userInfo.value.name),
-      //     onPressed: () {
-      //       Get.toNamed(Routes.login);
-      //     },
-      //   ),
-      // )
-    ),
-  );
+    );
+  }
 }

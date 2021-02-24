@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:haku_app/theme/theme.dart';
+
+import 'theme.dart';
 
 /// 暗黑主题
 class DarkTheme implements TemplateTheme {
@@ -13,15 +14,55 @@ class DarkTheme implements TemplateTheme {
   @override
   Color primaryColor = Color(0xFF000000);
 
+  /// 成功色调
+  @override
+  Color successColor = Color(0xFF07C160);
+
+  /// 警告色调
+  @override
+  Color dangerColor = Color(0xFFFF4D4F);
+
   /// 边框主色调
   @override
   Color borderColor = Color(0xFF000000);
 
+  /// 文字色
+  @override
+  Color fontColor = Color(0xFF303030);
+
+  /// 反色文字色
   @override
   Color fontColorInverse = Color(0xFF000000);
 
+  /// 提示文字色
+  @override
+  Color hintTextColor = Color(0xFFCCCCCC);
+
+  /// 禁用文字色
+  @override
+  Color disabledTextColor = Color(0xFFCCCCCC);
+
+  /// 文本框标签文本样式
+  @override
+  TextStyle inputLabelStyle;
+  
+  /// 普通文本样式
+  @override
+  TextStyle normalTextStyle;
+  
+  /// 次要文本样式
+  @override
+  TextStyle secondaryTextStyle;
+
+  /// 文本框文本样式
   @override
   TextStyle inputTextStyle;
+  
+  /// 标题文本样式
+  @override
+  TextStyle headTextStyle = TextStyle(
+    fontSize: 18
+  );
 
   /// 基础主题
   @override

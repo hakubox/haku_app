@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:haku_app/config/routes/routers.dart';
 import 'package:haku_app/packages/icons/fryo_icons.dart';
+import 'package:haku_app/packages/log/log.dart';
+import 'dart:convert' as convert;
 
 import 'home_controller.dart';
 
@@ -9,47 +11,52 @@ import 'home_controller.dart';
 class HomePage extends GetView<HomeController> {
 
   @override
-  Widget build(context) => Scaffold(
-    appBar: AppBar(
-      title: Obx(() => Text('home.title'.tr + '当前值：${controller.isSelected.value}')),
-      actions: [
-        IconButton(
-          icon: Icon(Fryo.user),
-          onPressed: () {
-            Get.toNamed(Routes.my);
-          },
-        )
-      ]
-    ),
-    body: Container(
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            MaterialButton(
-              child: Text('居中弹窗'),
-              onPressed: () {
-                Get.dialog(showDialog());
-              },
-            ),
-            MaterialButton(
-              child: Text('底部弹窗'),
-              onPressed: () {
-                Get.bottomSheet(showBottomDialog());
-              },
-            )
-          ],
+  build(context) {
+    if (Get.parameters.length > 0) {
+      Log.log(convert.jsonEncode(Get.parameters));
+    }
+    return Scaffold(
+      appBar: AppBar(
+        title: Obx(() => Text('home.title'.tr + '当前值：${controller.isSelected.value}')),
+        actions: [
+          IconButton(
+            icon: Icon(Fryo.user),
+            onPressed: () {
+              Get.toNamed(Routes.my);
+            },
+          )
+        ]
+      ),
+      body: Container(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              MaterialButton(
+                child: Text('居中弹窗'),
+                onPressed: () {
+                  Get.dialog(showDialog()).then((value) => Log.info(value));
+                },
+              ),
+              MaterialButton(
+                child: Text('底部弹窗'),
+                onPressed: () {
+                  Get.bottomSheet(showBottomDialog());
+                },
+              )
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 
   Widget showDialog() {
     return AlertDialog(
       actions: [
         FlatButton(
           child: Text("确定"),
-          onPressed: () => Get.back()
+          onPressed: () => Get.back(result: '点了确定！')
         )
       ],
       content: Container(

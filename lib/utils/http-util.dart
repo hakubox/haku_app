@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:haku_app/config/app_config/index.dart';
@@ -6,7 +8,7 @@ import 'package:haku_app/utils/tool.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'cache.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as tr;
 
 /// API Key
 final String _apiKey = api_key;
@@ -39,9 +41,9 @@ class HttpOptions {
     this.contentType = HttpContentType.json,
     this.responseType = ResponseType.json,
     this.apiVersion = __apiVersion,
-    this.connectTimeout = 10000,
-    this.receiveTimeout = 10000,
-    this.idleTimeout = 10000,
+    this.connectTimeout = 30000,
+    this.receiveTimeout = 30000,
+    this.idleTimeout = 30000,
     this.returnOriginData = false,
     this.cancelToken,
     this.interceptor,
@@ -70,18 +72,18 @@ class HttpOptions {
     Map<String, dynamic> extra
   }) {
     return HttpOptions(
-      data: this.data ?? data,
-      query: this.query ?? query,
-      method: this.method ?? method,
-      contentType: this.contentType ?? contentType,
-      responseType: this.responseType ?? responseType,
-      apiVersion: this.apiVersion ?? apiVersion,
-      connectTimeout: this.connectTimeout ?? connectTimeout,
-      receiveTimeout: this.receiveTimeout ?? receiveTimeout,
-      idleTimeout: this.idleTimeout ?? idleTimeout,
-      cancelToken: this.cancelToken ?? cancelToken,
-      interceptor: this.interceptor ?? interceptor,
-      returnOriginData: this.returnOriginData ?? returnOriginData,
+      data: data ?? this.data,
+      query: query ?? this.query,
+      method: method ?? this.method,
+      contentType: contentType ?? this.contentType,
+      responseType: responseType ?? this.responseType,
+      apiVersion: apiVersion ?? this.apiVersion,
+      connectTimeout: connectTimeout ?? this.connectTimeout,
+      receiveTimeout: receiveTimeout ?? this.receiveTimeout,
+      idleTimeout: idleTimeout ?? this.idleTimeout,
+      cancelToken: cancelToken ?? this.cancelToken,
+      interceptor: interceptor ?? this.interceptor,
+      returnOriginData: returnOriginData ?? this.returnOriginData,
       headers: {
         ...headers ?? {},
         ...this.headers ?? {}
@@ -156,24 +158,24 @@ class HttpUtil {
   }
 
   /// get请求
-  static Future<dynamic> get(String url, [Map<String, dynamic> query, HttpOptions options]) {
-    return request<dynamic>(url, (options ?? HttpOptions()).merge(
+  static Future<T> get<T>(String url, [Map<String, dynamic> query, HttpOptions options]) {
+    return request<T>(url, (options ?? HttpOptions()).merge(
       method: 'GET',
-      query: query.map((key, value) => MapEntry(key, value.toString()))
+      query: Map.fromEntries((query ?? {}).entries.where((item) => item.value != null))
     ));
   }
 
   /// post请求
-  static Future<dynamic> post(String url, [dynamic data, HttpOptions options]) {
-    return request<dynamic>(url, (options ?? HttpOptions()).merge(
+  static Future<T> post<T>(String url, [dynamic data, HttpOptions options]) {
+    return request<T>(url, (options ?? HttpOptions()).merge(
       method: 'POST',
       data: data
     ));
   }
 
   /// post表单提交
-  static Future<dynamic> formPost(String url, [Map<String, dynamic> data, HttpOptions options]) {
-    return request<dynamic>(url, (options ?? HttpOptions()).merge(
+  static Future<T> formPost<T>(String url, [Map<String, dynamic> data = const {}, HttpOptions options]) {
+    return request<T>(url, (options ?? HttpOptions()).merge(
       method: 'POST',
       contentType: HttpContentType.form,
       data: FormData.fromMap(data)
@@ -181,24 +183,24 @@ class HttpUtil {
   }
 
   /// delete请求
-  static Future<dynamic> delete(String url, [dynamic data, HttpOptions options]) {
-    return request<dynamic>(url, (options ?? HttpOptions()).merge(
+  static Future<T> delete<T>(String url, [dynamic data, HttpOptions options]) async {
+    return request<T>(url, (options ?? HttpOptions()).merge(
       method: 'DELETE',
       data: data
     ));
   }
 
   /// put请求
-  static Future<dynamic> put(String url, [dynamic data, HttpOptions options]) {
-    return request<dynamic>(url, (options ?? HttpOptions()).merge(
+  static Future<T> put<T>(String url, [dynamic data, HttpOptions options]) {
+    return request<T>(url, (options ?? HttpOptions()).merge(
       method: 'PUT',
       data: data
     ));
   }
 
   /// download请求
-  static Future<dynamic> download(String url, [HttpOptions options]) {
-    return request<dynamic>(url, (options ?? HttpOptions()).merge(
+  static Future<T> download<T>(String url, [HttpOptions options]) {
+    return request<T>(url, (options ?? HttpOptions()).merge(
       method: 'GET',
       responseType: ResponseType.bytes
     ));
@@ -215,9 +217,10 @@ class HttpUtil {
   ///   ]
   /// });
   /// ```
-  static Future<dynamic> upload(String url, [Map<String, dynamic> data, HttpOptions options]) {
-    return request<dynamic>(url, (options ?? HttpOptions()).merge(
+  static Future<T> upload<T>(String url, [Map<String, dynamic> query, Map<String, dynamic> data, HttpOptions options]) {
+    return request<T>(url, (options ?? HttpOptions()).merge(
       method: 'POST',
+      query: query,
       contentType: HttpContentType.formData,
       data: FormData.fromMap(data)
     ));
@@ -245,9 +248,9 @@ class HttpUtil {
     Dio dio;
 
     try {
-      print('___HTTP Request___');
-      print('Url: [' + options.method + ']' + url);
-      print('Params: ' + (options.query ?? options.data).toString());
+      // #d2a8ff
+      print('[36;5;12m[${options.method}]${url}[0m');
+      print('[36;5;12mParams: ${options.query ?? options.data}[0m');
 
       dio = Dio(
         BaseOptions(
@@ -268,6 +271,15 @@ class HttpUtil {
           onClientCreate: (_, clientSetting) => clientSetting.onBadCertificate = (_) => true,
         ),
       );
+      // 抓包配置
+      // (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
+      //   client.badCertificateCallback = (X509Certificate cert, String host, int port) {
+      //     return Platform.isAndroid;
+      //   };
+      //   client.findProxy = (uri) {
+      //     return "PROXY 192.168.3.4:8888";
+      //   };
+      // };
 
       // 添加预定义拦截器
       dio.interceptors.addAll(_interceptors);
@@ -293,16 +305,26 @@ class HttpUtil {
         queryData.sort();
         _headerToken = _apiKey + time.toString() + jsonEncode(queryData.join('')).replaceAll('\'', '');
       } else {
-        _headerToken = _apiKey + time.toString() + jsonEncode(options.data);
+        _headerToken = _apiKey + time.toString();
+        if (options.data is Map) {
+          _headerToken += jsonEncode(options.data);
+        } else if (options.data is List) {
+          _headerToken += options.data.toString();
+        } else if (options.data is FormData) {
+          _headerToken += (options.data as FormData).toString();
+        } else {
+          _headerToken += jsonEncode(options.data.toJson());
+        }
       }
 
+      dio.options.headers[HttpHeaders.acceptHeader] = _getContentType(options.contentType);
       response = await dio.request(url,
         queryParameters: options.query,
         data: options.data,
         cancelToken: options.cancelToken,
         options: Options(
           method: options.method,
-          contentType: _getContentType(options.contentType),
+          // contentType: _getContentType(options.contentType),
           responseType: options.responseType,
           headers: { 
             'Authorization': _authorization == null ? '' : 'Bearer ' + _authorization,
@@ -318,7 +340,7 @@ class HttpUtil {
         )
       );
 
-      print('响应数据：' + response.toString());
+      // print('响应数据：' + response.toString());
       // if (response.data.toString() == '') {
       //   throw DioError(
       //     type: DioErrorType.DEFAULT,

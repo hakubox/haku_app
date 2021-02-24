@@ -188,6 +188,8 @@ class ListPage extends GetView<ListController> {
                           height: 60,
                           fit: BoxFit.cover,
                           borderRadius: BorderRadius.all(Radius.circular(4)),
+                          // ossWidth: 80,
+                          // thumbnailSize: ThumbnailSize(width: 80),
                         ) : Image.asset('assets/img/no-image.jpg'),
                       ),
                       Expanded(

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:haku_app/config/routes/routers.dart';
 import 'package:haku_app/page/login/login_page.dart';
 import 'package:haku_app/utils/feature-permission.dart';
+import 'package:haku_app/utils/global.dart';
 import 'app_page.dart';
 
 /// 页面路由
@@ -41,5 +42,11 @@ abstract class PageRouters {
 
   /// 路由跳转钩子
   static routerCallback(Routing routing) {
+    if (routing.current != Routes.login) {
+      if (Global.isLogin()) {
+        return true;
+      }
+    }
+    return false;
   }
 }

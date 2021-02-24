@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/root/root_widget.dart';
 import 'package:haku_app/config/routes/pages.dart';
 import 'package:haku_app/packages/app_lifecycle/app_lifecycle.dart';
 import 'package:haku_app/packages/app_router/page_routers.dart';
