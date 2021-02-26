@@ -56,6 +56,11 @@ Get.updateLocale(locale);
 
 // 切换主题
 Get.changeTheme(ThemeData.light());
+
+// [第三方]日期格式化
+DateUtil.formatDate(date, format: 'yyyy-MM-dd HH:mm')
+// [第三方]日期格式化，例如：'三天前'
+TimelineUtil.formatByDateTime(controller.model.value.endTime, locale: 'zh')
 ```
 
 ### 其他Get库常用函数
