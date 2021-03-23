@@ -8,12 +8,12 @@ import 'package:haku_app/page/list/list_page.dart';
 import 'package:haku_app/page/login/login_binding.dart';
 import 'package:haku_app/page/login/login_page.dart';
 import 'package:haku_app/page/base_page.dart';
-import 'package:haku_app/page/my/my_page.dart';
+import 'package:haku_app/page/my/my_home_page.dart';
 import 'package:haku_app/page/splash/splash_binding.dart';
 import 'package:haku_app/page/splash/splash_page.dart';
 import '../../page/home/home_binding.dart';
 import '../../page/list/list_binding.dart';
-import '../../page/my/my_binding.dart';
+import '../../page/my/my_home_binding.dart';
 
 /// 路由表
 final List<AppPage> pages = [
@@ -24,7 +24,7 @@ final List<AppPage> pages = [
   AppPage(name: Routes.login, page: () => LoginPage(), binding: LoginBinding()),
   AppPage(name: Routes.list, page: () => ListPage(), binding: ListBinding()),
   AppPage(name: Routes.detail, page: () => DetailPage(model: Get.arguments), binding: DetailBinding()),
-  AppPage(name: Routes.my, page: () => MyPage(), binding: MyBinding()),
+  AppPage(name: Routes.my, page: () => MyHomePage(), binding: MyHomeBinding()),
   // GetPage(
   //   name: '/third',
   //   page: () => Third(),

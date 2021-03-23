@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:haku_app/page/list/list_binding.dart';
-import 'package:haku_app/page/my/my_binding.dart';
+import 'package:haku_app/page/my/my_home_binding.dart';
 import 'package:haku_app/page/home/home_page.dart';
-import 'package:haku_app/page/my/my_page.dart';
+import 'package:haku_app/page/my/my_home_page.dart';
 
 import '../routers.dart';
 
@@ -23,8 +23,8 @@ class ProfileTabRouter extends StatelessWidget {
     if (settings.name == '/') {
       return GetPageRoute(
         settings: settings,
-        page: () => MyPage(),
-        binding: MyBinding()
+        page: () => MyHomePage(),
+        binding: MyHomeBinding()
       );
     }
     
